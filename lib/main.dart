@@ -1,42 +1,27 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 
 void main() {
-  runApp(const MyApp());
+  runApp(const BingoApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BingoApp extends StatelessWidget {
+  const BingoApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return CupertinoApp(
+      theme: CupertinoThemeData(brightness: Brightness.light),
+      home: const BingoTestPage(title: 'BINGO'),
+      debugShowCheckedModeBanner: true,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+class BingoTestPage extends StatefulWidget {
+  const BingoTestPage({super.key, required this.title});
 
   // This widget is the home page of your application. It is stateful, meaning
   // that it has a State object (defined below) that contains fields that affect
@@ -50,10 +35,10 @@ class MyHomePage extends StatefulWidget {
   final String title;
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<BingoTestPage> createState() => _BingoTestPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _BingoTestPageState extends State<BingoTestPage> {
   int _counter = 0;
 
   void _incrementCounter() {
@@ -69,56 +54,106 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+    return CupertinoPageScaffold(
+      navigationBar: CupertinoNavigationBar(
+        middle: Text(widget.title),
+        automaticBackgroundVisibility: false,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            const Text('This is hello world test, hello from neovim!'),
-            const Text('I\'m changing the TEEEXT'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      child: Center(child: BingoBoardImage()),
+      //child: Center(child: const Image(
+      //              image: NetworkImage('https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg')
+      //          ),
+      //  //child: Column(
+      //  //  mainAxisAlignment: MainAxisAlignment.center,
+      //  //  children: <Widget>[
+      //  //    const Text('You have pushed the button this many times:'),
+      //  //    Text('$_counter'),
+      //  //    CupertinoButton(
+      //  //      onPressed: _incrementCounter,
+      //  //      child: Text('The Button in Question'),
+      //  //    ),
+      //  //  ],
+      //  //),
+      //),
+    );
+  }
+}
+
+class BingoBoardImage extends StatefulWidget {
+  const BingoBoardImage({super.key});
+
+  @override
+  State<BingoBoardImage> createState() => _BingoBoardImageState();
+}
+
+class _BingoBoardImageState extends State<BingoBoardImage> {
+  Uint8List? _imageBytes;
+
+  @override
+  void initState() {
+    super.initState();
+    _generateBingoBoardImage();
+  }
+
+  Future<void> _generateBingoBoardImage() async {
+    const int size = 500;
+    final recorder = ui.PictureRecorder();
+    final canvas = Canvas(
+      recorder,
+      Rect.fromLTWH(0, 0, size.toDouble(), size.toDouble()),
+    );
+
+    // Begin Bingo Board
+    const int gridSize = 5;
+    final paint =
+        Paint()
+          ..color = Color.fromARGB(255, 0, 255, 0)
+          ..strokeWidth = 2;
+
+    final cellSize = size / gridSize;
+
+    for (int i = 0; i <= gridSize; i++) {
+      double offset = i * cellSize;
+        // Horizontal
+      canvas.drawLine(
+        Offset(0, offset),
+        Offset(size.toDouble(), offset),
+        paint,
+      );
+        // Vertical
+      canvas.drawLine(
+        Offset(offset, 0),
+        Offset(offset, size.toDouble()),
+        paint,
+      );
+    }
+
+    // etc. etc.
+
+    // End Bingo Board
+
+    final picture = recorder.endRecording();
+    final img = await picture.toImage(size, size);
+    final byteData = await img.toByteData(format: ui.ImageByteFormat.png);
+    final bytes = byteData!.buffer.asUint8List();
+
+    //print('Got to the end...');
+
+    setState(() {
+      _imageBytes = bytes;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _imageBytes != null
+            ? Image.memory(_imageBytes!)
+            : Text('Generating...'),
+        CupertinoButton(onPressed: _generateBingoBoardImage, child: const Text('Regenerate')),
+      ],
     );
   }
 }
