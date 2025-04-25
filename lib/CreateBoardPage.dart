@@ -16,63 +16,43 @@ class CreateBoardPage extends StatefulWidget {
 class _CreateBoardPageState extends State<CreateBoardPage> {
   @override
   Widget build(BuildContext context) {
-    return MediaQuery.removePadding(
-      context: context,
-      removeTop: true,
-      child: CupertinoPageScaffold(
-        navigationBar: CupertinoNavigationBar(
-          automaticBackgroundVisibility: false,
-          leading: CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              CupertinoSheetRoute.popSheet(context);
-            },
-            child: const Text('Cancel'),
+    return GestureDetector(
+      onVerticalDragDown: (_) {},
+      child: MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            automaticBackgroundVisibility: false,
+            leading: CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                CupertinoSheetRoute.popSheet(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            middle: const Text('New Board'),
+            trailing: CupertinoButton(
+              padding: EdgeInsets.zero,
+              onPressed: () {
+                CupertinoSheetRoute.popSheet(context);
+              },
+              child: const Text('Create'),
+            ),
           ),
-          middle: const Text('New Board'),
-          trailing: CupertinoButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              //Navigator.of(context).pop();
-              CupertinoSheetRoute.popSheet(context);
-            },
-            child: const Text('Create'),
-          ),
-        ),
-        child: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: const [
-                // Your form or sheet content goes here
-                Text('Create your board content here'),
-              ],
+          child: SafeArea(
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: const [
+                  // Your form or sheet content goes here
+                  Text('Create your board content here'),
+                ],
+              ),
             ),
           ),
         ),
       ),
     );
-
-    //return CupertinoPageScaffold(
-    //  child: Center(child: Text('Create board here')),
-    //);
-
-    //return Center(child: Text('Create board here'));
-
-    //return CupertinoPageScaffold(
-    //  navigationBar: CupertinoNavigationBar(
-    //    automaticBackgroundVisibility: false,
-    //    leading: CupertinoButton(
-    //      // "Select" button
-    //      padding: EdgeInsets.zero,
-    //      onPressed: () {
-    //        Navigator.pop(context);
-    //      },
-    //      child: const Text('Cancel'),
-    //    ),
-    //    middle: Text('New Board'),
-    //  ),
-    //  child: Center(child: Text('Create board')),
-    //);
   }
 }
