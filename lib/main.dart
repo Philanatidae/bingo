@@ -5,6 +5,7 @@
  */
 
 import 'package:bingo/bloc/BingoBoardCubit.dart';
+import 'package:bingo/bloc/CreateBoardCubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,9 +20,17 @@ Future<void> main() async {
     storageDirectory:
         kIsWeb
             ? HydratedStorageDirectory.web
-            : HydratedStorageDirectory((await getApplicationSupportDirectory()).path),
+            : HydratedStorageDirectory(
+              (await getApplicationSupportDirectory()).path,
+            ),
   );
   runApp(
-    BlocProvider(create: (_) => BingoBoardsCubit(), child: const BingoApp()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<BingoBoardsCubit>(create: (_) => BingoBoardsCubit()),
+        BlocProvider<CreateBoardCubit>(create: (_) => CreateBoardCubit()),
+      ],
+      child: const BingoApp(),
+    ),
   );
 }

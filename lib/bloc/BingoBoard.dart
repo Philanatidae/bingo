@@ -8,7 +8,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'BingoBoard.g.dart';
 
-enum BoardType { names, numbers }
+enum BoardType { numbers, names }
 
 @JsonSerializable()
 class BingoBoard {
