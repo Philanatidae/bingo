@@ -5,6 +5,7 @@
  */
 
 import 'package:bingo/bloc/BingoBoard.dart';
+import 'package:bingo/bloc/BingoBoardCubit.dart';
 import 'package:bingo/bloc/CreateBoardCubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,6 +67,7 @@ class CreateBoardPage extends StatelessWidget {
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: () {
+                context.read<BingoBoardsCubit>().addBoard(context.read<CreateBoardCubit>().state);
                 CupertinoSheetRoute.popSheet(context);
               },
               child: const Text('Create'),
@@ -119,7 +121,6 @@ class CreateBoardPage extends StatelessWidget {
                             ),
                             // This is called when selected item is changed.
                             onSelectedItemChanged: (int selectedItem) {
-                              print('Item changed!');
                               context
                                   .read<CreateBoardCubit>()
                                   .updateTypeFromIndex(selectedItem);
@@ -181,7 +182,6 @@ class CreateBoardPage extends StatelessWidget {
                             ),
                             // This is called when selected item is changed.
                             onSelectedItemChanged: (int selectedItem) {
-                              print('Item changed!');
                               context
                                   .read<CreateBoardCubit>()
                                   .updateSizeFromIndex(selectedItem);
