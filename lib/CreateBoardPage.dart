@@ -13,7 +13,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class CreateBoardPage extends StatelessWidget {
   const CreateBoardPage({super.key});
 
-  void _showDialog(BuildContext context, Widget child) {
+  void _showModalDialog(BuildContext context, Widget child) {
     showCupertinoModalPopup<void>(
       context: context,
       builder:
@@ -46,6 +46,51 @@ class CreateBoardPage extends StatelessWidget {
     );
   }
 
+  void _showAlertDialog(BuildContext context, String title, String message) {
+    showCupertinoDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoAlertDialog(
+          title: Text(title),
+          content: Text(message),
+          actions: [
+            CupertinoDialogAction(
+              child: Text('OK'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _validateAndSubmit(BuildContext context) {
+    BingoBoard proposedBoard = context.read<CreateBoardCubit>().state;
+    if (proposedBoard.name.isEmpty) {
+      _showAlertDialog(
+        context,
+        'Missing Name',
+        'Please enter a name for the board.',
+      );
+      return;
+    }
+    if (context.read<BingoBoardsCubit>().state.doesBoardExist(
+      proposedBoard.name,
+    )) {
+      _showAlertDialog(
+        context,
+        'Duplicate Board',
+        'There is already a board with this name. Please enter another name.',
+      );
+      return;
+    }
+
+    context.read<BingoBoardsCubit>().addBoard(
+      context.read<CreateBoardCubit>().state,
+    );
+    CupertinoSheetRoute.popSheet(context);
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -67,8 +112,7 @@ class CreateBoardPage extends StatelessWidget {
             trailing: CupertinoButton(
               padding: EdgeInsets.zero,
               onPressed: () {
-                context.read<BingoBoardsCubit>().addBoard(context.read<CreateBoardCubit>().state);
-                CupertinoSheetRoute.popSheet(context);
+                _validateAndSubmit(context);
               },
               child: const Text('Create'),
             ),
@@ -81,7 +125,7 @@ class CreateBoardPage extends StatelessWidget {
                     CupertinoTextFormFieldRow(
                       prefix: const Text('Name'),
                       onChanged: (value) {
-                        context.read<CreateBoardCubit>().updateName(value);
+                        context.read<CreateBoardCubit>().updateName(value.trim());
                       },
                     ),
                     GestureDetector(
@@ -105,7 +149,7 @@ class CreateBoardPage extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        _showDialog(
+                        _showModalDialog(
                           context,
                           CupertinoPicker(
                             magnification: 1.22,
@@ -166,7 +210,7 @@ class CreateBoardPage extends StatelessWidget {
                         ),
                       ),
                       onTap: () {
-                        _showDialog(
+                        _showModalDialog(
                           context,
                           CupertinoPicker(
                             magnification: 1.22,

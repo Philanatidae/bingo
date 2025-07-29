@@ -15,6 +15,15 @@ class BingoBoards {
 
   BingoBoards({required this.boards});
 
+  bool doesBoardExist(String name) {
+    for (int i = 0; i < boards.length; i++) {
+      if (boards[i].name == name) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   BingoBoards copyWith({List<BingoBoard>? boards}) {
     return BingoBoards(boards: boards ?? this.boards);
   }
