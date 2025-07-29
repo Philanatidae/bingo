@@ -7,6 +7,7 @@
 import 'package:bingo/CreateBoardPage.dart';
 import 'package:bingo/bloc/BingoBoards.dart';
 import 'package:bingo/bloc/BingoBoardCubit.dart';
+import 'package:bingo/bloc/CreateBoardCubit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -77,22 +78,12 @@ class BoardListPage extends StatelessWidget {
           // "Add" button
           padding: EdgeInsets.zero,
           onPressed: () {
+            context.read<CreateBoardCubit>().resetBoard();
             showCupertinoSheet(
              context: context,
              pageBuilder: (BuildContext context) => const CreateBoardPage(),
              useNestedNavigation: true,
             );
-
-            // !!! Below is for testing.
-            // final cubit = context.read<BingoBoardsCubit>();
-            // final newBoardName = 'Board ${cubit.state.boards.length + 1}';
-            // cubit.addBoard(
-            //   BingoBoard(
-            //     name: newBoardName,
-            //     type: BoardType.numbers,
-            //     gridSize: 5,
-            //   ),
-            // );
           },
           child: const Icon(CupertinoIcons.add),
         ),

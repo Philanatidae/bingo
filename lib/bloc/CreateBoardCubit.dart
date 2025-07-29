@@ -39,15 +39,17 @@ class CreateBoardCubit extends Cubit<BingoBoard> {
   }
 
   void resetBoard() {
-    emit(BingoBoard(name: '', type: BoardType.names, gridSize: 5));
+    emit(BingoBoard(name: '', type: BoardType.numbers, gridSize: 5));
   }
 
   List<Pair<BoardType, String>> getBoardTypes() {
     return _boardTypes;
   }
+
   int getTypeIndex() {
     return _boardTypes.indexWhere((pair) => pair.key == state.type);
   }
+
   void updateTypeFromIndex(int index) {
     // @todo Error checking
     final cappedIndex = math.min(math.max(index, 0), _boardTypes.length - 1);
@@ -57,9 +59,11 @@ class CreateBoardCubit extends Cubit<BingoBoard> {
   List<Pair<int, String>> getBoardSizes() {
     return _boardSizes;
   }
+
   int getSizeIndex() {
     return _boardSizes.indexWhere((pair) => pair.key == state.gridSize);
   }
+
   void updateSizeFromIndex(int index) {
     // @todo Error checking
     final cappedIndex = math.min(math.max(index, 0), _boardSizes.length - 1);
