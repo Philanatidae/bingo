@@ -10,6 +10,15 @@ part 'BingoBoard.g.dart';
 
 enum BoardType { numbers, names }
 
+String boardTypeToString(BoardType type) {
+    switch(type) {
+        case BoardType.numbers:
+            return 'numbers';
+        case BoardType.names:
+            return 'names';
+    }
+}
+
 @JsonSerializable()
 class BingoBoard {
   final String name;

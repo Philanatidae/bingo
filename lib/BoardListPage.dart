@@ -12,6 +12,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import 'bloc/BingoBoard.dart';
+
 class BoardListPage extends StatelessWidget {
   const BoardListPage({super.key});
 
@@ -49,7 +51,7 @@ class BoardListPage extends StatelessWidget {
                   ],
                 ),
                 child: CupertinoListTile(
-                  title: Text(board.name),
+                  title: Text('${board.name} (${board.gridSize}x${board.gridSize} ${boardTypeToString(board.type)})'),
                   trailing: const CupertinoListTileChevron(),
                   onTap: () {
                     print('Tapped on ${board.name}');
